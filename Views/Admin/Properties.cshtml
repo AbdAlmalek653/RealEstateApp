@@ -1,0 +1,39 @@
+﻿@model IEnumerable<RealEstateApp.Models.Property>
+
+@{
+    ViewData["Title"] = "إدارة العقارات";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>إدارة كافة العقارات</h3>
+    <a asp-action="Index" class="btn btn-secondary btn-sm">&larr; عودة للوحة التحكم</a>
+</div>
+
+<table class="table table-bordered table-striped align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>العنوان</th>
+            <th>السعر</th>
+            <th>الموقع</th>
+            <th>البائع</th>
+            <th>الإجراءات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Title</td>
+                <td>@p.Price.ToString("N0") $</td>
+                <td>@p.Location</td>
+                <td>@p.Seller?.FullName</td>
+                <td>
+                    <a asp-action="EditProperty" asp-route-id="@p.Id" class="btn btn-warning btn-sm">تعديل</a>
+                    <form asp-action="DeleteProperty" asp-route-id="@p.Id" method="post" onsubmit="return confirm('هل أنت تأكد من حذف هذا العقار؟');" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,40 @@
+﻿@model RealEstateApp.Models.Property
+
+@{
+    ViewData["Title"] = "تعديل بيانات العقار";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card glass-card p-4 text-white">
+            <h4 class="text-gradient mb-3">تعديل بيانات العقار</h4>
+            <form asp-action="EditProperty" method="post">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="SellerId" />
+                <input type="hidden" asp-for="CreatedAt" />
+
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label"></label>
+                    <input asp-for="Title" class="form-control bg-dark text-white border-secondary" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Price" class="form-label"></label>
+                    <input asp-for="Price" class="form-control bg-dark text-white border-secondary" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Location" class="form-label"></label>
+                    <input asp-for="Location" class="form-control bg-dark text-white border-secondary" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label"></label>
+                    <textarea asp-for="Description" class="form-control bg-dark text-white border-secondary" rows="4"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-warning w-100">تحديث البيانات</button>
+            </form>
+        </div>
+    </div>
+</div>

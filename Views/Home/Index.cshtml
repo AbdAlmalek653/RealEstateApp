@@ -1,0 +1,135 @@
+﻿@model IEnumerable<RealEstateApp.Models.Property>
+
+@{
+    ViewData["Title"] = "الرئيسية - استكشف أفضل العقارات";
+}
+
+<!-- 1. Hero Section - القسم الترحيبي -->
+<div class="row align-items-center my-5 py-4">
+    <div class="col-lg-7 text-end mb-4 mb-lg-0">
+        <span class="badge bg-primary bg-opacity-20 text-primary px-3 py-2 rounded-pill fs-6 mb-3 border border-primary border-opacity-25">
+            ✨ المنصة العقارية الأكثر حداثة
+        </span>
+        <h1 class="display-4 fw-bold text-gradient mb-3">
+            اعثر على منزل أحلامك بسهولة وأمان
+        </h1>
+        <p class="lead text-light opacity-75 mb-4">
+            تصفح مئات العقارات المتاحة للبيع والإيجار مباشرة من المالكين، أو أضف عقارك الخاص واستقبل اتصالات المشترين فوراً.
+        </p>
+        <div class="d-flex gap-3 flex-wrap">
+            <a href="#properties-section" class="btn btn-gradient-primary btn-lg px-4 fs-6">
+                استكشف العقارات الآن
+            </a>
+            @if (User.IsInRole("Admin") || User.IsInRole("Seller"))
+            {
+                <a asp-action="Create" class="btn btn-outline-light btn-lg px-4 fs-6">
+                    + أضف عقارك مجاناً
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- إحصائيات سريعة / كروت بصرية -->
+    <div class="col-lg-5">
+        <div class="row g-3">
+            <div class="col-6">
+                <div class="card glass-card p-4 text-center">
+                    <h2 class="text-gradient fw-bold mb-1">@Model.Count()</h2>
+                    <p class="text-light opacity-75 mb-0">عقار متاح</p>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card glass-card p-4 text-center">
+                    <h2 class="text-gradient fw-bold mb-1">100%</h2>
+                    <p class="text-light opacity-75 mb-0">تواصل مباشر</p>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card glass-card p-4 d-flex flex-row align-items-center gap-3">
+                    <div class="fs-1 text-primary">⚡</div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-white">سهولة التواصل عبر الواتساب</h6>
+                        <small class="text-light opacity-75">تواصل مباشرة مع البائع بنقرة زر واحدة دون وسطاء.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="border-secondary my-5 opacity-25" />
+
+<!-- 2. قسم التصفية والبحث (Filter Bar) -->
+<div id="properties-section" class="card glass-card p-4 mb-5">
+    <form method="get" asp-action="Index" class="row g-3 align-items-end">
+        <div class="col-md-5">
+            <label class="form-label text-light">البحث باسم العقار أو الموقع</label>
+            <input type="text" name="searchQuery" class="form-control bg-dark text-white border-secondary" placeholder="مثال: شقة للبيع في دمشق..." />
+        </div>
+        <div class="col-md-4">
+            <label class="form-label text-light">الترتيب حسب</label>
+            <select name="sortBy" class="form-select bg-dark text-white border-secondary">
+                <option value="newest">الأحدث إضافة</option>
+                <option value="price_asc">السعر: من الأقل للأعلى</option>
+                <option value="price_desc">السعر: من الأعلى للأقل</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-gradient-primary w-100">بحث وتصفية</button>
+        </div>
+    </form>
+</div>
+
+<!-- 3. شبكة عرض العقارات (Properties Grid) -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="text-gradient fw-bold mb-0">أحدث العقارات المعروضة</h3>
+    <span class="text-light opacity-75">إجمالي النتائج: @Model.Count()</span>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card glass-card p-5 text-center my-4">
+        <h4 class="text-light opacity-75">لا توجد عقارات معروضة حالياً</h4>
+        <p class="text-muted">قم بزيارة الصفحة لاحقاً أو أضف أول عقار في المنصة!</p>
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <!-- استخراج الصورة الأولى من قائمة الصور -->
+            var firstImage = item.Images != null && item.Images.Any()
+                ? item.Images.FirstOrDefault()?.ImagePath
+                : "https://via.placeholder.com/600x400?text=No+Image";
+
+            <div class="col-md-4 mb-4">
+                <div class="card glass-card h-100 text-white overflow-hidden border-0">
+                    <div class="position-relative">
+                        <img src="@firstImage" class="card-img-top" style="height: 230px; object-fit: cover;" alt="@item.Title" />
+                        <span class="position-absolute top-0 end-0 bg-primary text-white px-3 py-1 m-3 rounded-pill fs-6 fw-bold shadow">
+                            @item.Price.ToString("N0") $
+                        </span>
+                    </div>
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold text-white mb-2">@item.Title</h5>
+                        <p class="card-text text-light opacity-75 small mb-3">
+                            📍 @item.Location
+                        </p>
+                        <p class="card-text text-light opacity-50 small flex-grow-1">
+                            @(item.Description.Length > 90 ? item.Description.Substring(0, 90) + "..." : item.Description)
+                        </p>
+                    </div>
+
+                    <div class="card-footer bg-transparent border-top border-secondary border-opacity-25 d-flex justify-content-between align-items-center py-3">
+                        <small class="text-light opacity-75">👤 البائع: @(item.Seller?.FullName ?? "غير معروف")</small>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-gradient-primary btn-sm px-3">
+                            التفاصيل والتواصل
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}مس 
