@@ -1,36 +1,91 @@
 ﻿@model IEnumerable<RealEstateApp.Models.ApplicationUser>
 
 @{
-    ViewData["Title"] = "إدارة المستخدمين";
+    ViewData["Title"] = "إدارة كافة الحسابات";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h3>إدارة كافة الحسابات</h3>
-    <a asp-action="Index" class="btn btn-secondary btn-sm">&larr; عودة للوحة التحكم</a>
-</div>
+<div class="container my-4">
+    <!-- رأس الصفحة مع الزر الترحيبي وزر إضافة أدمن -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h3 class="text-gradient fw-bold mb-1">👥 إدارة كافة الحسابات</h3>
+            <p class="text-light opacity-75 small mb-0">عرض كافة الحسابات المسجلة في المنصة وإدارتها</p>
+        </div>
 
-<table class="table table-bordered table-striped align-middle">
-    <thead class="table-dark">
-        <tr>
-            <th>الاسم الكامل</th>
-            <th>البريد الإلكتروني</th>
-            <th>رقم الهاتف</th>
-            <th>الإجراءات</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.FullName</td>
-                <td>@user.Email</td>
-                <td>@user.PhoneNumber</td>
-                <td>
-                    <form asp-action="DeleteUser" asp-route-id="@user.Id" method="post" onsubmit="return confirm('هل أنت تأكد من حذف هذا الحساب؟');" style="display:inline;">
-                        <button type="submit" class="btn btn-danger btn-sm">حذف الحساب</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+        <div class="d-flex gap-2">
+            @if (User.IsInRole("SuperAdmin"))
+            {
+                <a asp-action="CreateAdmin" class="btn btn-gradient-primary btn-sm px-3">
+                    + إضافة أدمن جديد
+                </a>
+            }
+            <a asp-action="Index" class="btn btn-outline-light btn-sm px-3">&larr; عودة للوحة التحكم</a>
+        </div>
+    </div>
+
+    <!-- تنبيه عند نجاح إنشاء أدمن جديد -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success bg-success bg-opacity-25 text-white border-0 mb-4 rounded-3">
+            ✅ @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <!-- جدول الحسابات بتصميم عصري -->
+    <div class="card glass-card p-3 overflow-hidden border-0 shadow">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0 bg-transparent">
+                <thead>
+                    <tr class="border-bottom border-secondary border-opacity-50 text-light opacity-75">
+                        <th scope="col" class="py-3">الاسم الكامل</th>
+                        <th scope="col" class="py-3">البريد الإلكتروني</th>
+                        <th scope="col" class="py-3">رقم الهاتف</th>
+                        <th scope="col" class="py-3 text-center">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-light opacity-50">
+                                لا يوجد مستخدمين مسجلين حالياً.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var user in Model)
+                        {
+                            <tr class="border-bottom border-secondary border-opacity-25">
+                                <td class="fw-bold text-white">
+                                    👤 @(string.IsNullOrEmpty(user.FullName) ? "غير محدد" : user.FullName)
+                                </td>
+                                <td class="text-light opacity-75">@user.Email</td>
+                                <td class="text-light opacity-75">
+                                    @(string.IsNullOrEmpty(user.PhoneNumber) ? "-" : user.PhoneNumber)
+                                </td>
+                                <td class="text-center">
+                                    @if (user.Email != User.Identity?.Name) // منع الأدمن من حذف نفسه
+                                    {
+                                        <form asp-action="DeleteUser" asp-route-id="@user.Id" method="post" onsubmit="return confirm('هل أنت تأكد من حذف هذا الحساب نهائياً؟');" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-outline-danger btn-sm px-3">
+                                                🗑️ حذف الحساب
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-info bg-opacity-25 text-info border border-info border-opacity-25 px-2 py-1">
+                                            حسابك الحالي
+                                        </span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

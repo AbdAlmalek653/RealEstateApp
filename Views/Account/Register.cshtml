@@ -4,61 +4,81 @@
     ViewData["Title"] = "إنشاء حساب جديد";
 }
 
-<div class="row justify-content-center mt-4">
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0 text-center">إنشاء حساب جديد</h4>
+<div class="row justify-content-center align-items-center min-vh-80 my-5">
+    <div class="col-md-7 col-lg-5">
+        <div class="card glass-card p-4 p-md-5 text-white shadow-lg border-0">
+            <!-- Header Section -->
+            <div class="text-center mb-4">
+                <span class="fs-1">👤✨</span>
+                <h3 class="fw-bold text-gradient mt-2 mb-1">إنشاء حساب جديد</h3>
+                <p class="text-light opacity-75 small">انضم إلينا اليوم واستمتع بتجربة عقارية فريدة</p>
             </div>
-            <div class="card-body">
-                <form asp-action="Register" method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                    <div class="mb-3">
-                        <label asp-for="FullName" class="form-label"></label>
-                        <input asp-for="FullName" class="form-control" />
-                        <span asp-validation-for="FullName" class="text-danger"></span>
+            <form asp-controller="Account" asp-action="Register" method="post">
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3 text-center"></div>
+
+                <!-- Full Name -->
+                <div class="mb-3">
+                    <label asp-for="FullName" class="form-label text-light small fw-bold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-light">👤</span>
+                        <input asp-for="FullName" class="form-control bg-dark text-white border-secondary" placeholder="أدخل اسمك الكامل" />
                     </div>
+                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Email" class="form-label"></label>
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
+                <!-- Email -->
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label text-light small fw-bold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-light">📧</span>
+                        <input asp-for="Email" class="form-control bg-dark text-white border-secondary" placeholder="example@domain.com" />
                     </div>
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
 
-                    <div class="mb-3">
-                        <label asp-for="PhoneNumber" class="form-label"></label>
-                        <input asp-for="PhoneNumber" class="form-control" placeholder="05xxxxxxxx" />
-                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                <!-- Phone Number -->
+                <div class="mb-3">
+                    <label asp-for="PhoneNumber" class="form-label text-light small fw-bold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-light">📱</span>
+                        <input asp-for="PhoneNumber" class="form-control bg-dark text-white border-secondary text-end" placeholder="09xxxxxxxx" dir="ltr" />
                     </div>
+                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                </div>
 
-                    <div class="mb-3">
-                        <label asp-for="UserType" class="form-label"></label>
-                        <select asp-for="UserType" class="form-select">
-                            <option value="Buyer">مشتري / متصفح (للتصفح فقط)</option>
-                            <option value="Seller">بائع / صاحب عقارات (لإضافة وتصفح العقارات)</option>
-                        </select>
-                        <span asp-validation-for="UserType" class="text-danger"></span>
+                <!-- Password -->
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label text-light small fw-bold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-light">🔒</span>
+                        <input asp-for="Password" class="form-control bg-dark text-white border-secondary" placeholder="••••••••" />
                     </div>
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Password" class="form-label"></label>
-                        <input asp-for="Password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
+                <!-- Confirm Password -->
+                <div class="mb-4">
+                    <label asp-for="ConfirmPassword" class="form-label text-light small fw-bold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-light">🔑</span>
+                        <input asp-for="ConfirmPassword" class="form-control bg-dark text-white border-secondary" placeholder="••••••••" />
                     </div>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                </div>
 
-                    <div class="mb-3">
-                        <label asp-for="ConfirmPassword" class="form-label"></label>
-                        <input asp-for="ConfirmPassword" class="form-control" />
-                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                    </div>
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-gradient-primary w-100 py-2 fs-6 fw-bold mb-3">
+                    تأكيد وإنشاء الحساب
+                </button>
 
-                    <button type="submit" class="btn btn-primary w-100">تسجيل الحساب</button>
-                </form>
-            </div>
-            <div class="card-footer text-center">
-                <span>لديك حساب بالفعل؟ <a asp-action="Login">تسجيل الدخول</a></span>
-            </div>
+                <!-- Footer Link -->
+                <div class="text-center mt-3">
+                    <small class="text-light opacity-75">لديك حساب بالفعل؟ </small>
+                    <a asp-controller="Account" asp-action="Login" class="text-primary text-decoration-none fw-bold small">تسجيل الدخول</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>

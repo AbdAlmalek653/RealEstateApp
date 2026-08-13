@@ -1,39 +1,73 @@
 ﻿@model IEnumerable<RealEstateApp.Models.Property>
 
 @{
-    ViewData["Title"] = "إدارة العقارات";
+    ViewData["Title"] = "إدارة كافة العقارات";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h3>إدارة كافة العقارات</h3>
-    <a asp-action="Index" class="btn btn-secondary btn-sm">&larr; عودة للوحة التحكم</a>
-</div>
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h3 class="text-gradient fw-bold mb-1">🏘️ إدارة كافة العقارات</h3>
+            <p class="text-light opacity-75 small mb-0">التحكم في العروض العقارية، تعديلها، أو تغيير حالتها</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-light btn-sm">&larr; عودة للوحة التحكم</a>
+    </div>
 
-<table class="table table-bordered table-striped align-middle">
-    <thead class="table-dark">
-        <tr>
-            <th>العنوان</th>
-            <th>السعر</th>
-            <th>الموقع</th>
-            <th>البائع</th>
-            <th>الإجراءات</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var p in Model)
-        {
-            <tr>
-                <td>@p.Title</td>
-                <td>@p.Price.ToString("N0") $</td>
-                <td>@p.Location</td>
-                <td>@p.Seller?.FullName</td>
-                <td>
-                    <a asp-action="EditProperty" asp-route-id="@p.Id" class="btn btn-warning btn-sm">تعديل</a>
-                    <form asp-action="DeleteProperty" asp-route-id="@p.Id" method="post" onsubmit="return confirm('هل أنت تأكد من حذف هذا العقار؟');" style="display:inline;">
-                        <button type="submit" class="btn btn-danger btn-sm">حذف</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="card glass-card p-3 border-0 shadow">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0 bg-transparent">
+                <thead>
+                    <tr class="border-bottom border-secondary border-opacity-50 text-light opacity-75">
+                        <th>العقار</th>
+                        <th>الموقع</th>
+                        <th>المواصفات</th>
+                        <th>السعر</th>
+                        <th>البائع</th>
+                        <th>الحالة</th>
+                        <th class="text-center">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-light opacity-50">لا توجد عقارات مضافة بعد.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr class="border-bottom border-secondary border-opacity-25">
+                                <td class="fw-bold text-white">@item.Title</td>
+                                <td class="small text-light opacity-75">📍 @item.Governorate - @item.City</td>
+                                <td class="small text-light opacity-75">
+                                    📏 @item.Area م² | 🛏️ @item.RoomsCount غرف | 📄 @item.LegalStatus
+                                </td>
+                                <td class="fw-bold text-warning">@item.Price.ToString("N0") $</td>
+                                <td class="small text-light opacity-75">👤 @(item.Seller?.FullName ?? "غير معروف")</td>
+                                <td>
+                                    <form asp-action="ToggleStatus" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm @(item.Status == RealEstateApp.Models.PropertyStatus.Available ? "btn-success" : "btn-danger") rounded-pill px-3">
+                                            @(item.Status == RealEstateApp.Models.PropertyStatus.Available ? "🟢 متاح" : "🔴 تم البيع")
+                                        </button>
+                                    </form>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a asp-action="EditProperty" asp-route-id="@item.Id" class="btn btn-outline-warning btn-sm">✏️ تعديل</a>
+                                        <form asp-action="DeleteProperty" asp-route-id="@item.Id" method="post" onsubmit="return confirm('هل أنت تأكد من حذف هذا العقار؟');" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">🗑️ حذف</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

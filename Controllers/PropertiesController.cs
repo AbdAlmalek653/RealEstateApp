@@ -63,60 +63,48 @@ namespace RealEstateApp.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Admin,Seller")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreatePropertyViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var currentUser = await _userManager.GetUserAsync(User);
-
                 var property = new Property
                 {
                     Title = model.Title,
+                    Governorate = model.Governorate,
+                    City = model.City,
+                    Area = model.Area,
+                    RoomsCount = model.RoomsCount,
+                    LegalStatus = model.LegalStatus,
+                    PhoneDialCode = model.PhoneDialCode,
+                    PhoneNumber = model.PhoneNumber,
                     Description = model.Description,
                     Price = model.Price,
-                    Location = model.Location,
-                    CreatedAt = DateTime.Now,
-                    SellerId = currentUser.Id
+                    SellerId = _userManager.GetUserId(User) ?? string.Empty
                 };
 
-                // معالجة رفع الصور المتعددة
-                if (model.ImageFiles != null && model.ImageFiles.Count > 0)
+                // معالجة رفع الصور إن وجدت...
+                if (model.ImageFiles != null && model.ImageFiles.Any())
                 {
-                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
-
-                    // إنشاء مجلد uploads إذا لم يكن موجوداً
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-
                     foreach (var file in model.ImageFiles)
                     {
-                        if (file.Length > 0)
+                        var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+                        Directory.CreateDirectory(uploadsFolder);
+                        var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
                         {
-                            // صياغة اسم فريد لكل صورة لتجنب التكرار
-                            string uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(file.FileName);
-                            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                            using (var fileStream = new FileStream(filePath, FileMode.Create))
-                            {
-                                await file.CopyToAsync(fileStream);
-                            }
-
-                            property.Images.Add(new PropertyImage
-                            {
-                                ImagePath = "/uploads/" + uniqueFileName
-                            });
+                            await file.CopyToAsync(fileStream);
                         }
+
+                        property.Images.Add(new PropertyImage { ImagePath = "/uploads/" + uniqueFileName });
                     }
                 }
 
-                _context.Properties.Add(property);
+                _context.Add(property);
                 await _context.SaveChangesAsync();
-
                 return RedirectToAction(nameof(Index));
             }
 

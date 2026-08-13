@@ -1,26 +1,66 @@
 ﻿@{
-    ViewData["Title"] = "لوحة تحكم الأدمن";
+    ViewData["Title"] = "لوحة التحكم";
 }
 
-<h2 class="mb-4">لوحة تحكم الأدمن</h2>
-
-<div class="row">
-    <div class="col-md-6 mb-3">
-        <div class="card bg-primary text-white shadow-sm">
-            <div class="card-body text-center">
-                <h3>@ViewBag.UsersCount</h3>
-                <p class="mb-2">إجمالي الحسابات المسجلة</p>
-                <a asp-action="Users" class="btn btn-light btn-sm fw-bold">إدارة المستخدمين &rarr;</a>
-            </div>
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-gradient fw-bold mb-1">📊 لوحة تحكم الإدارة</h2>
+            <p class="text-light opacity-75 small mb-0">مرحباً بك، يمكنك إدارة العقارات والمستخدمين من هنا.</p>
         </div>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-light btn-sm">&larr; العودة للموقع</a>
     </div>
-    <div class="col-md-6 mb-3">
-        <div class="card bg-success text-white shadow-sm">
-            <div class="card-body text-center">
-                <h3>@ViewBag.PropertiesCount</h3>
-                <p class="mb-2">إجمالي العقارات المضافة</p>
-                <a asp-action="Properties" class="btn btn-light btn-sm fw-bold">إدارة العقارات &rarr;</a>
+
+    <div class="row g-4 mb-5">
+        <!-- كارت إحصائية العقارات -->
+        <div class="col-md-6">
+            <div class="card glass-card p-4 text-white d-flex flex-row align-items-center justify-content-between shadow-lg">
+                <div>
+                    <h6 class="text-light opacity-75 mb-1">إجمالي العقارات</h6>
+                    <h1 class="display-5 text-gradient fw-bold mb-0">@ViewBag.PropertiesCount</h1>
+                </div>
+                <div class="fs-1 text-primary bg-primary bg-opacity-25 p-3 rounded-circle">🏠</div>
             </div>
         </div>
+
+        <!-- كارت إحصائية المستخدمين (للـ SuperAdmin حصراً) -->
+        @if (User.IsInRole("SuperAdmin"))
+        {
+            <div class="col-md-6">
+                <div class="card glass-card p-4 text-white d-flex flex-row align-items-center justify-content-between shadow-lg">
+                    <div>
+                        <h6 class="text-light opacity-75 mb-1">إجمالي المستخدمين</h6>
+                        <h1 class="display-5 text-gradient fw-bold mb-0">@ViewBag.UsersCount</h1>
+                    </div>
+                    <div class="fs-1 text-info bg-info bg-opacity-25 p-3 rounded-circle">👥</div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- إجراءات سريعة -->
+    <div class="row g-3">
+        <div class="col-md-6">
+            <a asp-action="Properties" class="card glass-card p-4 text-white text-decoration-none h-100 d-flex flex-row align-items-center gap-3">
+                <div class="fs-2 text-warning">🏘️</div>
+                <div>
+                    <h5 class="fw-bold mb-1">إدارة العقارات وحالتها</h5>
+                    <small class="text-light opacity-75">عرض، تعديل، حذف، وتغيير حالة العقارات (متاح / تم البيع).</small>
+                </div>
+            </a>
+        </div>
+
+        @if (User.IsInRole("SuperAdmin"))
+        {
+            <div class="col-md-6">
+                <a asp-action="Users" class="card glass-card p-4 text-white text-decoration-none h-100 d-flex flex-row align-items-center gap-3">
+                    <div class="fs-2 text-success">👤</div>
+                    <div>
+                        <h5 class="fw-bold mb-1">إدارة الحسابات والأدمن</h5>
+                        <small class="text-light opacity-75">إضافة أدمن مساعد جديد، حذف حسابات، والتحكم بالمستخدمين.</small>
+                    </div>
+                </a>
+            </div>
+        }
     </div>
 </div>

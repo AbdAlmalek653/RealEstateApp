@@ -1,39 +1,86 @@
 ﻿@model RealEstateApp.Models.Property
 
 @{
-    ViewData["Title"] = "تعديل بيانات العقار";
+    ViewData["Title"] = "تعديل العقار";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-8">
+<div class="row justify-content-center my-4">
+    <div class="col-lg-8">
         <div class="card glass-card p-4 text-white">
-            <h4 class="text-gradient mb-3">تعديل بيانات العقار</h4>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="text-gradient fw-bold mb-0">✏️ تعديل بيانات العقار</h3>
+                <a asp-action="Properties" class="btn btn-outline-light btn-sm">&larr; العودة للعقارات</a>
+            </div>
+
             <form asp-action="EditProperty" method="post">
+                @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" asp-for="SellerId" />
                 <input type="hidden" asp-for="CreatedAt" />
 
                 <div class="mb-3">
-                    <label asp-for="Title" class="form-label"></label>
+                    <label asp-for="Title" class="form-label">عنوان العقار</label>
                     <input asp-for="Title" class="form-control bg-dark text-white border-secondary" />
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="Price" class="form-label"></label>
-                    <input asp-for="Price" class="form-control bg-dark text-white border-secondary" />
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Governorate" class="form-label">المحافظة</label>
+                        <input asp-for="Governorate" class="form-control bg-dark text-white border-secondary" />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="City" class="form-label">المدينة / المنطقة</label>
+                        <input asp-for="City" class="form-control bg-dark text-white border-secondary" />
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label asp-for="Area" class="form-label">المساحة (م²)</label>
+                        <input asp-for="Area" type="number" step="0.1" class="form-control bg-dark text-white border-secondary" />
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="RoomsCount" class="form-label">عدد الغرف</label>
+                        <input asp-for="RoomsCount" type="number" class="form-control bg-dark text-white border-secondary" />
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="LegalStatus" class="form-label">نوع الفراغة</label>
+                        <select asp-for="LegalStatus" class="form-select bg-dark text-white border-secondary">
+                            <option value="طابو أخضر">طابو أخضر</option>
+                            <option value="مشاع بعقد تنازل">مشاع بعقد تنازل</option>
+                            <option value="بعقد تنازل">بعقد تنازل</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label asp-for="PhoneDialCode" class="form-label">نداء الدولة</label>
+                        <input asp-for="PhoneDialCode" class="form-control bg-dark text-white border-secondary" />
+                    </div>
+                    <div class="col-md-8">
+                        <label asp-for="PhoneNumber" class="form-label">رقم الهاتف</label>
+                        <input asp-for="PhoneNumber" class="form-control bg-dark text-white border-secondary" />
+                    </div>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Location" class="form-label"></label>
-                    <input asp-for="Location" class="form-control bg-dark text-white border-secondary" />
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Description" class="form-label"></label>
+                    <label asp-for="Description" class="form-label">الوصف التفصيلي</label>
                     <textarea asp-for="Description" class="form-control bg-dark text-white border-secondary" rows="4"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-warning w-100">تحديث البيانات</button>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="Price" class="form-label">السعر المطلوب ($)</label>
+                        <input asp-for="Price" type="number" class="form-control bg-dark text-white border-secondary" />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label">حالة العقار</label>
+                        <select asp-for="Status" asp-items="Html.GetEnumSelectList<RealEstateApp.Models.PropertyStatus>()" class="form-select bg-dark text-white border-secondary"></select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-gradient-primary w-100 py-2 fs-5">حفظ التغييرات</button>
             </form>
         </div>
     </div>

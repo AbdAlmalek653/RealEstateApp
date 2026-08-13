@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RealEstateApp.Models;
 using RealEstateApp.ViewModels;
+using System.Threading.Tasks;
 
 namespace RealEstateApp.Controllers
 {
@@ -18,17 +19,17 @@ namespace RealEstateApp.Controllers
             _signInManager = signInManager;
         }
 
-        // 1. صفحة إنشـاء حساب (عرض)
+        // 1. صفحة إنشاء حساب (عرض)
         [HttpGet]
         public IActionResult Register()
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity != null && User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Home");
 
             return View();
         }
 
-        // 1. صفحة إنشـاء حساب (معالجة)
+        // 1. صفحة إنشاء حساب (معالجة)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -40,18 +41,14 @@ namespace RealEstateApp.Controllers
                     UserName = model.Email,
                     Email = model.Email,
                     FullName = model.FullName,
-                    PhoneNumber = model.PhoneNumber
+                    PhoneNumber = model.PhoneNumber // تخزين رقم الهاتف من مودل التسجيل
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
-
                 if (result.Succeeded)
                 {
-                    // تعيين الدور (Seller أو Buyer)
-                    string role = (model.UserType == "Seller") ? "Seller" : "Buyer";
-                    await _userManager.AddToRoleAsync(user, role);
-
-                    // تسجيل الدخول مباشرة بعد التوثيق
+                    // إعطاء دور البائع/المشتري تلقائياً لكافة الحسابات المنشأة جديداً
+                    await _userManager.AddToRoleAsync(user, "Seller");
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
@@ -61,15 +58,14 @@ namespace RealEstateApp.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
             return View(model);
         }
 
         // 2. صفحة تسجيل الدخول (عرض)
         [HttpGet]
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login(string? returnUrl = null)
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity != null && User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Home");
 
             ViewData["ReturnUrl"] = returnUrl;
@@ -79,7 +75,7 @@ namespace RealEstateApp.Controllers
         // 2. صفحة تسجيل الدخول (معالجة)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
 
@@ -96,7 +92,7 @@ namespace RealEstateApp.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                ModelState.AddModelError(string.Empty, "محاولة تسجيل دخول غير صحيحة. تحقق من البيانات.");
+                ModelState.AddModelError(string.Empty, "بيانات الدخول غير صحيحة، يرجى التحقق من البريد أو كلمة المرور.");
             }
 
             return View(model);

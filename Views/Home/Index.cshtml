@@ -20,7 +20,7 @@
             <a asp-controller="Properties" asp-action="Index" class="btn btn-gradient-primary btn-lg px-4 fs-6">
                 تصفح كافة العقارات &larr;
             </a>
-            @if (User.IsInRole("Admin") || User.IsInRole("Seller"))
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
             {
                 <a asp-controller="Properties" asp-action="Create" class="btn btn-outline-light btn-lg px-4 fs-6">
                     + أضف عقاراً جديداً
@@ -59,7 +59,7 @@
 
 <hr class="border-secondary my-5 opacity-25" />
 
-<!-- قسم أحدث العقارات Moused Grid -->
+<!-- قسم أحدث العقارات Grid -->
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h3 class="text-gradient fw-bold mb-1">أحدث العقارات المضافة</h3>
@@ -89,15 +89,25 @@ else
                     <div class="position-relative">
                         <img src="@firstImage" class="card-img-top" style="height: 220px; object-fit: cover;" alt="@item.Title" />
                         <span class="position-absolute top-0 end-0 bg-primary text-white px-3 py-1 m-3 rounded-pill fs-6 fw-bold shadow">
-                            @item.Price.ToString("N0") $
+                            $@item.Price.ToString("N0")
                         </span>
                     </div>
 
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title fw-bold text-white mb-2">@item.Title</h5>
+
+                        <!-- التعديل هنا: استخدام Governorate و City بدلاً من Location -->
                         <p class="card-text text-light opacity-75 small mb-2">
-                            📍 @item.Location
+                            📍 <strong>@item.Governorate</strong> - @item.City
                         </p>
+
+                        <!-- إضافة شارات المساحة والغرف ونوع الفراغة -->
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <span class="badge bg-dark border border-secondary text-light">📐 @item.Area م²</span>
+                            <span class="badge bg-dark border border-secondary text-light">🚪 @item.RoomsCount غرف</span>
+                            <span class="badge bg-info bg-opacity-20 text-info border border-info border-opacity-25">📄 @item.LegalStatus</span>
+                        </div>
+
                         <p class="card-text text-light opacity-50 small flex-grow-1">
                             @(item.Description.Length > 80 ? item.Description.Substring(0, 80) + "..." : item.Description)
                         </p>

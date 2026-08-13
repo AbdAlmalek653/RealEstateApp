@@ -72,6 +72,10 @@ wwwroot\uploads\a17f3238-3524-4e6f-8754-de97debab10c_Screenshot 2026-08-11 22403
 wwwroot\uploads\c8445303-1724-4c6e-83a9-b5b1534fdc72_Screenshot 2026-08-11 221600.png
 wwwroot\uploads\c997d683-2397-41b3-8f84-4619ab9a569d_Screenshot 2026-08-11 220838.png
 wwwroot\uploads\e6b0b1ea-44da-4f36-b1f3-ee3fb8530057_Screenshot 2026-08-11 222024.png
+wwwroot\uploads\515f0efa-1058-4143-a368-4d034aa6641c_download.jpg
+wwwroot\uploads\67a970ff-e66d-4608-a0f5-e0777b3c7ccd_download (1).jpg
+wwwroot\uploads\88cd180e-1687-42d9-89e1-a68a010a781f_images - Copy.jpg
+wwwroot\uploads\f0132ffe-892b-49cc-9f36-cfc55957676b_images.jpg
 C:\Users\AbdoAlmalik\source\repos\RealEstateApp\RealEstateApp\wwwroot\css\site.css
 C:\Users\AbdoAlmalik\source\repos\RealEstateApp\RealEstateApp\wwwroot\favicon.ico
 C:\Users\AbdoAlmalik\source\repos\RealEstateApp\RealEstateApp\wwwroot\js\site.js

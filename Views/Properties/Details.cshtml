@@ -1,62 +1,98 @@
 ﻿@model RealEstateApp.Models.Property
 
-<div class="container mt-3">
-    <a asp-action="Index" class="btn btn-outline-light mb-3">&rarr; العودة للقائمة</a>
+@{
+    ViewData["Title"] = Model.Title;
+    var adminWhatsappNumber = "963912345678"; // رقم الواتساب الخاص بك كأدمن وسيط
+}
 
-    <div class="row">
-        <div class="col-md-8 mb-4">
-            <!-- سلايدر عارض لجميع الصور المرفقة -->
-            @if (Model.Images != null && Model.Images.Any())
-            {
-                <div id="propertyCarousel" class="carousel slide rounded overflow-hidden shadow-lg mb-4" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        @for (int i = 0; i < Model.Images.Count; i++)
+<div class="container my-5">
+    <div class="row g-4">
+        <!-- معرض الصور -->
+        <div class="col-lg-7">
+            <div class="card glass-card p-3 overflow-hidden">
+                <div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner rounded">
+                        @if (Model.Images != null && Model.Images.Any())
                         {
-                            var img = Model.Images.ElementAt(i);
-                            <div class="carousel-item @(i == 0 ? "active" : "")">
-                                <img src="@img.ImagePath" class="d-block w-100" style="height: 450px; object-fit: cover;" alt="@Model.Title">
+                            var first = true;
+                            foreach (var img in Model.Images)
+                            {
+                                <div class="carousel-item @(first ? "active" : "")">
+                                    <img src="@img.ImagePath" class="d-block w-100" style="height: 420px; object-fit: cover;" alt="@Model.Title">
+                                </div>
+                                first = false;
+                            }
+                        }
+                        else
+                        {
+                            <div class="carousel-item active">
+                                <img src="https://via.placeholder.com/800x500?text=No+Image" class="d-block w-100" style="height: 420px; object-fit: cover;">
                             </div>
                         }
                     </div>
-                    @if (Model.Images.Count > 1)
-                    {
-                        <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </button>
-                    }
                 </div>
-            }
-            else
-            {
-                <img src="https://via.placeholder.com/600x400?text=No+Image" class="img-fluid rounded w-100 mb-4" style="height: 400px; object-fit: cover;" />
-            }
-
-            <h2 class="text-gradient fw-bold">@Model.Title</h2>
-            <h3 class="text-success mb-3">@Model.Price.ToString("N0") $</h3>
-            <p><strong>الموقع:</strong> @Model.Location</p>
-            <p><strong>تاريخ النشر:</strong> @Model.CreatedAt.ToString("yyyy/MM/dd")</p>
-            <hr class="border-secondary" />
-            <h5>الوصف التفصيلي</h5>
-            <p>@Model.Description</p>
+            </div>
         </div>
 
-        <!-- كارت التواصل مع البائع -->
-        <div class="col-md-4">
-            <div class="card glass-card p-3 text-white">
-                <h5 class="text-gradient mb-3">معلومات التواصل مع البائع</h5>
-                <p><strong>اسم البائع:</strong> @Model.Seller?.FullName</p>
-                <p><strong>رقم الهاتف:</strong> <a href="tel:@Model.Seller?.PhoneNumber" class="text-info">@Model.Seller?.PhoneNumber</a></p>
-                <p><strong>البريد الإلكتروني:</strong> @Model.Seller?.Email</p>
+        <!-- المواصفات والتواصل مع الأدمن -->
+        <div class="col-lg-5">
+            <div class="card glass-card p-4 text-white h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <!-- حالة العقار -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge @(Model.Status == RealEstateApp.Models.PropertyStatus.Available ? "bg-success" : "bg-danger") fs-6 px-3 py-2">
+                            @(Model.Status == RealEstateApp.Models.PropertyStatus.Available ? "🟢 متاح للبيع" : "🔴 تم البيع")
+                        </span>
+                        <span class="text-light opacity-75 small">📍 @Model.Governorate - @Model.City</span>
+                    </div>
 
-                @if (!string.IsNullOrEmpty(Model.Seller?.PhoneNumber))
-                {
-                    <a href="https://wa.me/@Model.Seller.PhoneNumber" class="btn btn-success w-100 mt-2" target="_blank">
-                        تواصل عبر واتساب
-                    </a>
-                }
+                    <h2 class="fw-bold text-gradient mb-4">@Model.Title</h2>
+
+                    <!-- كروت المواصفات العصرية -->
+                    <div class="row g-2 mb-4 text-center">
+                        <div class="col-4">
+                            <div class="p-3 bg-dark bg-opacity-50 rounded border border-secondary">
+                                <small class="text-light opacity-75 d-block">المساحة</small>
+                                <strong class="fs-5">@Model.Area م²</strong>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-3 bg-dark bg-opacity-50 rounded border border-secondary">
+                                <small class="text-light opacity-75 d-block">الغرف</small>
+                                <strong class="fs-5">@Model.RoomsCount غرف</strong>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-3 bg-dark bg-opacity-50 rounded border border-secondary">
+                                <small class="text-light opacity-75 d-block">نوع الفراغة</small>
+                                <strong class="fs-6 text-warning">@Model.LegalStatus</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold mb-2">الوصف:</h5>
+                    <p class="text-light opacity-75 mb-4">@Model.Description</p>
+                </div>
+
+                <!-- التكلفة والتواصل في أسفل الكارت -->
+                <div class="border-top border-secondary pt-3 mt-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="fs-5 text-light opacity-75">السعر النهائي:</span>
+                        <h2 class="text-gradient fw-bold mb-0">@Model.Price.ToString("N0") $</h2>
+                    </div>
+
+                    @if (Model.Status == RealEstateApp.Models.PropertyStatus.Available)
+                    {
+                        <a href="https://wa.me/@adminWhatsappNumber?text=مرحباً،%20أرغب%20بالاستفسار%20عن%20العقار:%20@Model.Title%20(كود:@Model.Id)"
+                           target="_blank" class="btn btn-success w-100 py-3 fs-5 fw-bold shadow">
+                            💬 التواصل لشراء العقار (عبر وسيط المنصة)
+                        </a>
+                    }
+                    else
+                    {
+                        <button disabled class="btn btn-secondary w-100 py-2">هذا العقار مباع حالياً</button>
+                    }
+                </div>
             </div>
         </div>
     </div>
