@@ -1,0 +1,14 @@
+## Visual Studio files
+.vs/
+bin/
+obj/
+publish/
+*.user
+*.suo
+
+## Database & Local Uploads
+*.db
+*.db-shm
+*.db-wal
+wwwroot/uploads/*
+!wwwroot/uploads/.gitkeep

@@ -215,3 +215,4 @@ C:\Users\AbdoAlmalik\source\repos\RealEstateApp\RealEstateApp\obj\Release\net10.
 C:\Users\AbdoAlmalik\source\repos\RealEstateApp\RealEstateApp\obj\Release\net10.0\RealEstateApp.genruntimeconfig.cache
 C:\Users\AbdoAlmalik\source\repos\RealEstateApp\RealEstateApp\obj\Release\net10.0\ref\RealEstateApp.dll
 C:\Users\AbdoAlmalik\source\repos\RealEstateApp\RealEstateApp\obj\Release\net10.0\staticwebassets.upToDateCheck.txt
+C:\Users\AbdoAlmalik\source\repos\RealEstateApp\RealEstateApp\obj\Release\net10.0\RealEstateApp.sourcelink.json

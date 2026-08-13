@@ -1,25 +1,31 @@
 using Microsoft.AspNetCore.Mvc;
-using RealEstateApp.Models;
-using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using RealEstateApp.Data;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RealEstateApp.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ApplicationDbContext context)
         {
-            return View();
+            _context = context;
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            // جلب أحدث العقارات مع الصور والبائع لعرضها في الصفحة الرئيسية
+            var latestProperties = await _context.Properties
+                .Include(p => p.Seller)
+                .Include(p => p.Images)
+                .OrderByDescending(p => p.CreatedAt)
+                .Take(6) // عرض أحدث 6 عقارات فقط في الهوم
+                .ToListAsync();
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(latestProperties);
         }
     }
 }
