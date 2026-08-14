@@ -163,21 +163,83 @@ namespace RealEstateApp.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
+                    Area = table.Column<double>(type: "REAL", nullable: false),
+                    RoomsCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    LegalStatus = table.Column<string>(type: "TEXT", nullable: false),
+                    Governorate = table.Column<string>(type: "TEXT", nullable: false),
+                    City = table.Column<string>(type: "TEXT", nullable: false),
+                    PhoneDialCode = table.Column<string>(type: "TEXT", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
-                    Price = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Location = table.Column<string>(type: "TEXT", nullable: false),
-                    ImageUrl = table.Column<string>(type: "TEXT", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    SellerId = table.Column<string>(type: "TEXT", nullable: false)
+                    SellerId = table.Column<string>(type: "TEXT", nullable: false),
+                    AssignedAdminId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Properties", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Properties_AspNetUsers_AssignedAdminId",
+                        column: x => x.AssignedAdminId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
                         name: "FK_Properties_AspNetUsers_SellerId",
                         column: x => x.SellerId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PropertyContactLogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    PropertyId = table.Column<int>(type: "INTEGER", nullable: false),
+                    AdminId = table.Column<string>(type: "TEXT", nullable: true),
+                    ClickedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ContactType = table.Column<string>(type: "TEXT", nullable: true),
+                    UserIpAddress = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PropertyContactLogs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PropertyContactLogs_AspNetUsers_AdminId",
+                        column: x => x.AdminId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_PropertyContactLogs_Properties_PropertyId",
+                        column: x => x.PropertyId,
+                        principalTable: "Properties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PropertyImages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ImagePath = table.Column<string>(type: "TEXT", nullable: false),
+                    PropertyId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PropertyImages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PropertyImages_Properties_PropertyId",
+                        column: x => x.PropertyId,
+                        principalTable: "Properties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -220,9 +282,29 @@ namespace RealEstateApp.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Properties_AssignedAdminId",
+                table: "Properties",
+                column: "AssignedAdminId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Properties_SellerId",
                 table: "Properties",
                 column: "SellerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PropertyContactLogs_AdminId",
+                table: "PropertyContactLogs",
+                column: "AdminId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PropertyContactLogs_PropertyId",
+                table: "PropertyContactLogs",
+                column: "PropertyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PropertyImages_PropertyId",
+                table: "PropertyImages",
+                column: "PropertyId");
         }
 
         /// <inheritdoc />
@@ -244,10 +326,16 @@ namespace RealEstateApp.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Properties");
+                name: "PropertyContactLogs");
+
+            migrationBuilder.DropTable(
+                name: "PropertyImages");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Properties");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

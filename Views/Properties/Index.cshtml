@@ -21,12 +21,18 @@
 <!-- Quick Search Form -->
 <div class="card glass-card p-3 mb-4">
     <form method="get" asp-action="Index" class="row g-2 align-items-center">
-        <div class="col-md-4">
-            <input type="text" name="searchQuery" class="form-control bg-dark text-white border-secondary" placeholder="بحث باسم العقار، المحافظة، أو المدينة..." />
-        </div>
         <div class="col-md-3">
+            <input type="text"
+                   name="searchQuery"
+                   value="@Context.Request.Query["searchQuery"]"
+                   class="form-control bg-dark text-white border-secondary"
+                   placeholder="اسم العقار أو المدينة" />
+        </div>
+
+        <div class="col-md-2">
             <select name="governorate" class="form-select bg-dark text-white border-secondary">
                 <option value="">جميع المحافظات</option>
+                <option value="إدلب">إدلب</option>
                 <option value="دمشق">دمشق</option>
                 <option value="ريف دمشق">ريف دمشق</option>
                 <option value="حلب">حلب</option>
@@ -36,7 +42,8 @@
                 <option value="حماة">حماة</option>
             </select>
         </div>
-        <div class="col-md-3">
+
+        <div class="col-md-2">
             <select name="legalStatus" class="form-select bg-dark text-white border-secondary">
                 <option value="">جميع أنواع الفراغة</option>
                 <option value="طابو أخضر">طابو أخضر</option>
@@ -44,10 +51,32 @@
                 <option value="بعقد تنازل">بعقد تنازل</option>
             </select>
         </div>
+
         <div class="col-md-2">
+            <input type="number"
+                   name="minPrice"
+                   value="@Context.Request.Query["minPrice"]"
+                   class="form-control bg-dark text-white border-secondary"
+                   placeholder="السعر من"
+                   min="0"
+                   step="0.01" />
+        </div>
+
+        <div class="col-md-2">
+            <input type="number"
+                   name="maxPrice"
+                   value="@Context.Request.Query["maxPrice"]"
+                   class="form-control bg-dark text-white border-secondary"
+                   placeholder="السعر إلى"
+                   min="0"
+                   step="0.01" />
+        </div>
+
+        <div class="col-md-1">
             <button type="submit" class="btn btn-outline-light w-100">بحث</button>
         </div>
     </form>
+
 </div>
 
 <!-- Properties Grid -->

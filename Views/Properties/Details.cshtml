@@ -3,6 +3,9 @@
 @{
     ViewData["Title"] = Model.Title;
     var adminWhatsappNumber = "963912345678"; // رقم الواتساب الخاص بك كأدمن وسيط
+
+    // تجهيز نص الرسالة بأمان بدون التباس في رموز الـ Razor
+    var messageText = Uri.EscapeDataString($"مرحباً، أرغب بالاستفسار عن العقار: {Model.Title} (كود: {Model.Id})");
 }
 
 <div class="container my-5">
@@ -26,10 +29,22 @@
                         else
                         {
                             <div class="carousel-item active">
-                                <img src="https://via.placeholder.com/800x500?text=No+Image" class="d-block w-100" style="height: 420px; object-fit: cover;">
+                                <img src="https://via.placeholder.com/800x500?text=No+Image" class="d-block w-100" style="height: 420px; object-fit: cover;" alt="No Image Available">
                             </div>
                         }
                     </div>
+
+                    @if (Model.Images != null && Model.Images.Count > 1)
+                    {
+                        <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">السابق</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">التالي</span>
+                        </button>
+                    }
                 </div>
             </div>
         </div>
@@ -38,7 +53,7 @@
         <div class="col-lg-5">
             <div class="card glass-card p-4 text-white h-100 d-flex flex-column justify-content-between">
                 <div>
-                    <!-- حالة العقار -->
+                    <!-- حالة العقار والموقع -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span class="badge @(Model.Status == RealEstateApp.Models.PropertyStatus.Available ? "bg-success" : "bg-danger") fs-6 px-3 py-2">
                             @(Model.Status == RealEstateApp.Models.PropertyStatus.Available ? "🟢 متاح للبيع" : "🔴 تم البيع")
@@ -83,9 +98,9 @@
 
                     @if (Model.Status == RealEstateApp.Models.PropertyStatus.Available)
                     {
-                        <a href="https://wa.me/@adminWhatsappNumber?text=مرحباً،%20أرغب%20بالاستفسار%20عن%20العقار:%20@Model.Title%20(كود:@Model.Id)"
+                        <a asp-controller="Properties" asp-action="ContactAdmin" asp-route-id="@Model.Id" asp-route-type="WhatsApp"
                            target="_blank" class="btn btn-success w-100 py-3 fs-5 fw-bold shadow">
-                            💬 التواصل لشراء العقار (عبر وسيط المنصة)
+                            💬 التواصل لشراء العقار (عبر الأدمن المسؤول)
                         </a>
                     }
                     else

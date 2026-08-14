@@ -1,0 +1,58 @@
+﻿@model IEnumerable<RealEstateApp.Models.PropertyContactLog>
+
+@{
+    ViewData["Title"] = "سجل نقرات التواصل والطلبات";
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold text-gradient mb-1">📊 سجل نقرات التواصل</h3>
+            <p class="text-light opacity-75 small">عرض كافة الضغطات والتواصلات التي تمت من الزوار مع الإدارة</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-light btn-sm">&larr; العودة للوحة التحكم</a>
+    </div>
+
+    <div class="card glass-card p-3 border-0">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0 bg-transparent">
+                <thead>
+                    <tr class="text-light opacity-75 border-bottom border-secondary">
+                        <th>التاريخ والوقت</th>
+                        <th>العقار المستهدف</th>
+                        <th>الأدمن المخصص</th>
+                        <th>نوع التواصل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">لا توجد نقرات تواصل مسجلة حتى الآن.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var log in Model)
+                        {
+                            <tr class="border-bottom border-secondary border-opacity-25">
+                                <td dir="ltr" class="text-start">@log.ClickedAt.ToLocalTime().ToString("yyyy-MM-dd hh:mm tt")</td>
+                                <td>
+                                    <a asp-controller="Properties" asp-action="Details" asp-route-id="@log.PropertyId" class="text-info text-decoration-none fw-bold">
+                                        @(log.Property?.Title ?? $"عقار #{log.PropertyId}")
+                                    </a>
+                                </td>
+                                <td>👤 @(log.Admin?.FullName ?? "أدمن عام")</td>
+                                <td>
+                                    <span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-25 px-3 py-1">
+                                        💬 @log.ContactType
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +12,7 @@ using RealEstateApp.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. تحديد مسار قاعدة البيانات SQLite وإنشاء المجلد تلقائياً
+// 1. تحديد مسار قاعدة البيانات SQLite وإنشاء مجلد App_Data تلقائياً إذا لم يكن موجوداً
 var appDataPath = Path.Combine(builder.Environment.ContentRootPath, "App_Data");
 if (!Directory.Exists(appDataPath))
 {
@@ -25,7 +25,7 @@ var connectionString = $"Data Source={dbPath}";
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 
-// 2. إعداد Identity والأدوار
+// 2. إعداد Identity والأدوار وإلغاء تعقيدات كلمات المرور لتسهيل التطوير
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
@@ -38,7 +38,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-// 3. ضبط الكوكيز والمسارات
+// 3. ضبط مسارات الدخول وملفات تعريف الارتباط (Cookies)
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
@@ -49,7 +49,7 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// 4. معالجة البيئة والأخطاء
+// 4. معالجة البيئة ومسار معالجة الطلبات (Middleware Pipeline)
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -57,8 +57,10 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
 
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
@@ -69,8 +71,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// 5. تنفيذ الهجرة والـ Seeding مع التغليف الكامل بحماية Try-Catch
-// نضع العملية بعد إعداد الـ Pipeline لمنع انهيار الـ Process 500.30
+// 5. تهيئة وتحديث قاعدة البيانات دون حذف البيانات السابقة
 try
 {
     using (var scope = app.Services.CreateScope())
@@ -78,17 +79,18 @@ try
         var services = scope.ServiceProvider;
         var context = services.GetRequiredService<ApplicationDbContext>();
 
-        // إجبار إنشاء قاعدة البيانات إذا لم تكن موجودة
-        context.Database.EnsureCreated();
+        // استخدام EnsureCreatedAsync لتطبيق الجداول دون مسح البيانات السابقة
+        await context.Database.MigrateAsync();
 
-        // إضافة بيانات الأدمن والبيانات الأولية
+
+        // إنشاء الأدوار وحساب السوبر أدمن إذا لم تكن موجودة مسبقاً
         await DbInitializer.SeedAsync(services);
     }
 }
 catch (Exception ex)
 {
     var logger = app.Services.GetRequiredService<ILogger<Program>>();
-    logger.LogError(ex, "حدث استثناء أثناء تهيئة قاعدة البيانات عند بدء التشغيل.");
+    logger.LogError(ex, "حدث خطأ أثناء تهيئة قاعدة البيانات.");
 }
 
 app.Run();

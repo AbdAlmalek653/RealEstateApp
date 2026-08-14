@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RealEstateApp.Data;
+using RealEstateApp.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,17 +16,56 @@ namespace RealEstateApp.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(
+     string? searchQuery,
+     string? governorate,
+     string? legalStatus,
+     decimal? minPrice,
+     decimal? maxPrice)
         {
-            // جلب أحدث العقارات مع الصور والبائع لعرضها في الصفحة الرئيسية
-            var latestProperties = await _context.Properties
+            IQueryable<Property> query = _context.Properties
                 .Include(p => p.Seller)
-                .Include(p => p.Images)
+                .Include(p => p.Images);
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                searchQuery = searchQuery.Trim();
+
+                query = query.Where(p =>
+                    p.Title.Contains(searchQuery) ||
+                    p.Governorate.Contains(searchQuery) ||
+                    p.City.Contains(searchQuery));
+            }
+
+            if (!string.IsNullOrWhiteSpace(governorate))
+            {
+                governorate = governorate.Trim();
+                query = query.Where(p => p.Governorate == governorate);
+            }
+
+            if (!string.IsNullOrWhiteSpace(legalStatus))
+            {
+                legalStatus = legalStatus.Trim();
+                query = query.Where(p => p.LegalStatus == legalStatus);
+            }
+
+            if (minPrice.HasValue)
+            {
+                query = query.Where(p => p.Price >= minPrice.Value);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= maxPrice.Value);
+            }
+
+            var properties = await query
                 .OrderByDescending(p => p.CreatedAt)
-                .Take(6) // عرض أحدث 6 عقارات فقط في الهوم
                 .ToListAsync();
 
-            return View(latestProperties);
+            return View(properties);
         }
+
     }
 }

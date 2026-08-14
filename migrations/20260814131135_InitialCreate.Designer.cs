@@ -11,8 +11,8 @@ using RealEstateApp.Data;
 namespace RealEstateApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260811195729_AddPropertyImagesTable")]
-    partial class AddPropertyImagesTable
+    [Migration("20260814131135_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -222,6 +222,16 @@ namespace RealEstateApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<double>("Area")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("AssignedAdminId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
@@ -229,26 +239,77 @@ namespace RealEstateApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Location")
+                    b.Property<string>("Governorate")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LegalStatus")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhoneDialCode")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("RoomsCount")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("SellerId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Title")
                         .IsRequired()
+                        .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AssignedAdminId");
+
                     b.HasIndex("SellerId");
 
                     b.ToTable("Properties");
+                });
+
+            modelBuilder.Entity("RealEstateApp.Models.PropertyContactLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AdminId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ClickedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ContactType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserIpAddress")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdminId");
+
+                    b.HasIndex("PropertyId");
+
+                    b.ToTable("PropertyContactLogs");
                 });
 
             modelBuilder.Entity("RealEstateApp.Models.PropertyImage", b =>
@@ -324,13 +385,38 @@ namespace RealEstateApp.Migrations
 
             modelBuilder.Entity("RealEstateApp.Models.Property", b =>
                 {
+                    b.HasOne("RealEstateApp.Models.ApplicationUser", "AssignedAdmin")
+                        .WithMany()
+                        .HasForeignKey("AssignedAdminId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("RealEstateApp.Models.ApplicationUser", "Seller")
                         .WithMany("Properties")
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("AssignedAdmin");
+
                     b.Navigation("Seller");
+                });
+
+            modelBuilder.Entity("RealEstateApp.Models.PropertyContactLog", b =>
+                {
+                    b.HasOne("RealEstateApp.Models.ApplicationUser", "Admin")
+                        .WithMany()
+                        .HasForeignKey("AdminId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("RealEstateApp.Models.Property", "Property")
+                        .WithMany()
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Admin");
+
+                    b.Navigation("Property");
                 });
 
             modelBuilder.Entity("RealEstateApp.Models.PropertyImage", b =>

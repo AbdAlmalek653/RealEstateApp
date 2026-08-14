@@ -61,17 +61,34 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
+wwwroot\uploads\0135921c-21b3-4e7d-8ae4-2fa3817dbbfd_images.jpg
+wwwroot\uploads\093744f7-162d-488c-b12b-1af8bc160996_images - Copy.jpg
+wwwroot\uploads\1333cc9e-9a9a-46cd-95d2-737eb835a159_images - Copy.jpg
 wwwroot\uploads\159b6587-eac7-42cd-8788-fe8f7127a891_logo.png
+wwwroot\uploads\1743f56e-f112-446c-954e-c732788c3b9c_images.jpg
 wwwroot\uploads\1b2c1fc1-a932-4e5d-b415-8d9846ac7e9a_Screenshot 2026-08-11 221137.png
+wwwroot\uploads\1e8d7199-4730-4c6c-a5e1-712082bb056a_download.jpg
+wwwroot\uploads\1f9c218d-60c2-4618-b28d-e0c46c4d9d0c_images.jpg
+wwwroot\uploads\212113fd-d53c-410d-994e-c83c3ac1c684_download (1).jpg
 wwwroot\uploads\26d7c328-f546-4291-a446-6145ad0cf0fc_Screenshot 2026-08-11 221815.png
+wwwroot\uploads\30abcbfb-cdfe-459a-8c7a-9f599b9462ec_download (1).jpg
 wwwroot\uploads\4156ddd5-c737-46a5-b6cf-bdf59c253f9e_Screenshot 2026-08-11 221734.png
+wwwroot\uploads\515f0efa-1058-4143-a368-4d034aa6641c_download.jpg
 wwwroot\uploads\53888fea-5af3-4643-a1b5-311aa3d04067_Screenshot 2026-08-11 224633.png
 wwwroot\uploads\572c1f48-59c8-4fe5-8420-c69fb9c94893_Screenshot 2026-08-11 224218.png
+wwwroot\uploads\67a970ff-e66d-4608-a0f5-e0777b3c7ccd_download (1).jpg
+wwwroot\uploads\6fbe2261-9b98-46c9-94c4-94a518572e2f_images.jpg
+wwwroot\uploads\737d6d76-2e11-436b-88e5-2e0a1af0c1de_images - Copy.jpg
+wwwroot\uploads\8187f20b-1ca0-4329-9fbd-e5afb701b459_download.jpg
 wwwroot\uploads\85845603-fa1f-49f7-a039-89eb0fbc7c19_Screenshot 2026-08-11 221456.png
+wwwroot\uploads\88cd180e-1687-42d9-89e1-a68a010a781f_images - Copy.jpg
 wwwroot\uploads\a17f3238-3524-4e6f-8754-de97debab10c_Screenshot 2026-08-11 224037.png
+wwwroot\uploads\b1773ed1-bd8a-4396-8ee8-4f389621bd51_download.jpg
 wwwroot\uploads\c8445303-1724-4c6e-83a9-b5b1534fdc72_Screenshot 2026-08-11 221600.png
 wwwroot\uploads\c997d683-2397-41b3-8f84-4619ab9a569d_Screenshot 2026-08-11 220838.png
 wwwroot\uploads\e6b0b1ea-44da-4f36-b1f3-ee3fb8530057_Screenshot 2026-08-11 222024.png
+wwwroot\uploads\f0132ffe-892b-49cc-9f36-cfc55957676b_images.jpg
+wwwroot\uploads\f80eeebc-7c48-49a0-bcba-31b85e6a5673_download (1).jpg
 C:\Users\AbdoAlmalik\source\repos\RealEstateApp\RealEstateApp\wwwroot\js\site.js
 C:\Users\AbdoAlmalik\source\repos\RealEstateApp\RealEstateApp\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 C:\Users\AbdoAlmalik\source\repos\RealEstateApp\RealEstateApp\wwwroot\lib\jquery\LICENSE.txt

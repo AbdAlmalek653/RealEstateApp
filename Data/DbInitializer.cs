@@ -13,8 +13,8 @@ namespace RealEstateApp.Data
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            // 1. إنشاء الأدوار الأساسية
-            string[] roleNames = { "Admin", "Seller", "Buyer" };
+            // 1. إضافة دور SuperAdmin إلى قائمة الأدوار الأساسية
+            string[] roleNames = { "SuperAdmin", "Admin", "Seller", "Buyer" };
 
             foreach (var roleName in roleNames)
             {
@@ -25,26 +25,36 @@ namespace RealEstateApp.Data
                 }
             }
 
-            // 2. إنشاء حساب الأدمن الافتراضي
-            var adminEmail = "admin@realestate.com";
-            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+            // 2. إنشاء وتأكيد حساب الـ Super Admin
+            var superAdminEmail = "moh1.g.w1@gmail.com";
+            var superAdminUser = await userManager.FindByEmailAsync(superAdminEmail);
 
-            if (adminUser == null)
+            if (superAdminUser == null)
             {
-                var newAdmin = new ApplicationUser
+                var newSuperAdmin = new ApplicationUser
                 {
-                    UserName = adminEmail,
-                    Email = adminEmail,
-                    FullName = "مدير النظام",
+                    UserName = superAdminEmail,
+                    Email = superAdminEmail,
+                    FullName = "مدير النظام (Super Admin)",
                     PhoneNumber = "0500000000",
                     EmailConfirmed = true
                 };
 
-                var createPowerUser = await userManager.CreateAsync(newAdmin, "Admin123!");
+                var result = await userManager.CreateAsync(newSuperAdmin, "Admin123!");
 
-                if (createPowerUser.Succeeded)
+                if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(newAdmin, "Admin");
+                    // إعطاؤه صلاحيات الـ SuperAdmin وكذلك Admin لضمان الوصول لكافة الأجزاء
+                    await userManager.AddToRoleAsync(newSuperAdmin, "SuperAdmin");
+                    await userManager.AddToRoleAsync(newSuperAdmin, "Admin");
+                }
+            }
+            else
+            {
+                // في حال كان الحساب موجوداً مسبقاً، نضمن منحه دور SuperAdmin تلقائياً
+                if (!await userManager.IsInRoleAsync(superAdminUser, "SuperAdmin"))
+                {
+                    await userManager.AddToRoleAsync(superAdminUser, "SuperAdmin");
                 }
             }
         }

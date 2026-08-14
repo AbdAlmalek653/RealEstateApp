@@ -52,5 +52,7 @@ namespace RealEstateApp.ViewModels
 
         [Display(Name = "صور العقار")]
         public List<IFormFile>? ImageFiles { get; set; }
+        [Display(Name = "الأدمن المسؤول")]
+        public string? AssignedAdminId { get; set; }
     }
 }

@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <!-- تنبيه عند نجاح إنشاء أدمن جديد -->
+    <!-- تنبيه عند نجاح العمليات -->
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success bg-success bg-opacity-25 text-white border-0 mb-4 rounded-3">
@@ -56,30 +56,44 @@
                     {
                         @foreach (var user in Model)
                         {
+                            var isCurrentUser = user.UserName == User.Identity?.Name;
+
                             <tr class="border-bottom border-secondary border-opacity-25">
                                 <td class="fw-bold text-white">
                                     👤 @(string.IsNullOrEmpty(user.FullName) ? "غير محدد" : user.FullName)
                                 </td>
                                 <td class="text-light opacity-75">@user.Email</td>
-                                <td class="text-light opacity-75">
+                                <td class="text-light opacity-75" dir="ltr">
                                     @(string.IsNullOrEmpty(user.PhoneNumber) ? "-" : user.PhoneNumber)
                                 </td>
                                 <td class="text-center">
-                                    @if (user.Email != User.Identity?.Name) // منع الأدمن من حذف نفسه
-                                    {
-                                        <form asp-action="DeleteUser" asp-route-id="@user.Id" method="post" onsubmit="return confirm('هل أنت تأكد من حذف هذا الحساب نهائياً؟');" style="display:inline;">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-outline-danger btn-sm px-3">
-                                                🗑️ حذف الحساب
-                                            </button>
-                                        </form>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-info bg-opacity-25 text-info border border-info border-opacity-25 px-2 py-1">
-                                            حسابك الحالي
-                                        </span>
-                                    }
+                                    <div class="d-flex justify-content-center align-items-center gap-2">
+                                        @if (isCurrentUser)
+                                        {
+                                            <!-- تعديل الحساب الحالي -->
+                                            <a asp-action="EditProfile" class="btn btn-outline-info btn-sm px-3">
+                                                ✏️ تعديل حسابي
+                                            </a>
+                                            <span class="badge bg-info bg-opacity-25 text-info border border-info border-opacity-25 px-2 py-1">
+                                                حسابك الحالي
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <!-- تعديل حساب مستخدم أو أدمن آخر -->
+                                            <a asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-outline-warning btn-sm px-3">
+                                                ✏️ تعديل
+                                            </a>
+
+                                            <!-- حذف الحساب -->
+                                            <form asp-action="DeleteUser" asp-route-id="@user.Id" method="post" onsubmit="return confirm('هل أنت متأكد من حذف هذا الحساب نهائياً؟');" style="display:inline;">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-outline-danger btn-sm px-3">
+                                                    🗑️ حذف الحساب
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
                                 </td>
                             </tr>
                         }

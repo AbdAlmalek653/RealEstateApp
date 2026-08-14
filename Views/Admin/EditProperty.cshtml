@@ -63,7 +63,16 @@
                         <input asp-for="PhoneNumber" class="form-control bg-dark text-white border-secondary" />
                     </div>
                 </div>
-
+                @if (User.IsInRole("SuperAdmin"))
+                {
+                    <div class="mb-3">
+                        <label asp-for="AssignedAdminId" class="form-label text-light small fw-bold">الأدمن/الوسيط المسؤول عن متابعة العقار (خاص بالسوبر أدمن)</label>
+                        <select asp-for="AssignedAdminId" asp-items="ViewBag.AdminsList" class="form-select bg-dark text-white border-secondary">
+                            <option value="">-- اختر الأدمن المسؤول --</option>
+                        </select>
+                        <span asp-validation-for="AssignedAdminId" class="text-danger"></span>
+                    </div>
+                }
                 <div class="mb-3">
                     <label asp-for="Description" class="form-label">الوصف التفصيلي</label>
                     <textarea asp-for="Description" class="form-control bg-dark text-white border-secondary" rows="4"></textarea>

@@ -68,5 +68,11 @@ namespace RealEstateApp.Models
 
         // --- قائمة الصور المتعددة ---
         public virtual ICollection<PropertyImage> Images { get; set; } = new List<PropertyImage>();
+        // الأدمن المسؤول عن متابعة هذا العقار
+        // --- الأدمن المسؤول عن متابعة هذا العقار ---
+        public string? AssignedAdminId { get; set; }
+
+        [ForeignKey("AssignedAdminId")]
+        public virtual ApplicationUser? AssignedAdmin { get; set; }
     }
 }

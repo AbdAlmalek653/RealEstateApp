@@ -5,59 +5,75 @@
 }
 
 <div class="row justify-content-center my-4">
-    <div class="col-lg-9 col-md-10">
-        <div class="card glass-card p-4 p-md-5 text-white border-0 shadow-lg">
-
-            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary border-opacity-25">
-                <div>
-                    <h3 class="text-gradient fw-bold mb-1">➕ إضافة عقار جديد</h3>
-                    <p class="text-light opacity-75 small mb-0">أدخل كافة التفاصيل والمواصفات الخاصة بالعقار بدقة</p>
-                </div>
-                <a asp-controller="Properties" asp-action="Index" class="btn btn-outline-light btn-sm px-3">&larr; العودة للقائمة</a>
+    <div class="col-lg-8">
+        <div class="card glass-card p-4 text-white">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="text-gradient fw-bold mb-0">🏠 إضافة عقار جديد</h3>
+                <a asp-action="Index" class="btn btn-outline-light btn-sm">&larr; العودة للعقارات</a>
             </div>
 
             <form asp-action="Create" method="post" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly" class="alert alert-danger bg-danger bg-opacity-25 text-white border-0 mb-4 rounded-3"></div>
+                @Html.AntiForgeryToken()
+
+                <!-- ملخص كشف الأخطاء -->
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
 
                 <!-- عنوان العقار -->
-                <div class="mb-4">
-                    <label asp-for="Title" class="form-label fw-bold"></label>
-                    <input asp-for="Title" class="form-control bg-dark text-white border-secondary py-2" placeholder="مثال: شقة فاخرة للبيع في موقع مميز" />
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">عنوان العقار</label>
+                    <input asp-for="Title" class="form-control bg-dark text-white border-secondary" placeholder="مثال: شقة فاخرة للبيع في حي الروضة" />
                     <span asp-validation-for="Title" class="text-danger small"></span>
                 </div>
 
-                <!-- الموقع: المحافظة والمدينة -->
-                <div class="row g-3 mb-4">
+                <!-- المحافظة والمدينة -->
+                <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <label asp-for="Governorate" class="form-label fw-bold"></label>
-                        <input asp-for="Governorate" class="form-control bg-dark text-white border-secondary py-2" placeholder="مثال: دمشق، حلب..." />
+                        <label asp-for="Governorate" class="form-label">المحافظة</label>
+
+                        <select asp-for="Governorate"
+                                class="form-select bg-dark text-white border-secondary">
+                            <option value="">-- اختر المحافظة --</option>
+                            <option value="إدلب">إدلب</option>
+                            <option value="دمشق">دمشق</option>
+                            <option value="ريف دمشق">ريف دمشق</option>
+                            <option value="حلب">حلب</option>
+                            <option value="حمص">حمص</option>
+                            <option value="اللاذقية">اللاذقية</option>
+                            <option value="طرطوس">طرطوس</option>
+                            <option value="حماة">حماة</option>
+                            <option value="درعا">درعا</option>
+                            <option value="السويداء">السويداء</option>
+                            <option value="القنيطرة">القنيطرة</option>
+                            <option value="دير الزور">دير الزور</option>
+                            <option value="الرقة">الرقة</option>
+                            <option value="الحسكة">الحسكة</option>
+                        </select>
+
                         <span asp-validation-for="Governorate" class="text-danger small"></span>
                     </div>
+
                     <div class="col-md-6">
-                        <label asp-for="City" class="form-label fw-bold"></label>
-                        <input asp-for="City" class="form-control bg-dark text-white border-secondary py-2" placeholder="مثال: المزة، الميدان..." />
+                        <label asp-for="City" class="form-label">المدينة / المنطقة</label>
+                        <input asp-for="City" class="form-control bg-dark text-white border-secondary" placeholder="المنطقة أو الحي" />
                         <span asp-validation-for="City" class="text-danger small"></span>
                     </div>
                 </div>
 
-                <!-- المواصفات: المساحة بشكل رأسي ومستقل، الغرف، ونوع الفراغة -->
-                <div class="row g-3 mb-4">
+                <!-- المساحة وعدد الغرف ونوع الفراغة -->
+                <div class="row g-3 mb-3">
                     <div class="col-md-4">
-                        <label asp-for="Area" class="form-label fw-bold"></label>
-                        <div class="input-group">
-                            <input asp-for="Area" type="number" step="0.1" class="form-control bg-dark text-white border-secondary py-2" placeholder="150" />
-                            <span class="input-group-text bg-secondary bg-opacity-25 text-light border-secondary">م²</span>
-                        </div>
+                        <label asp-for="Area" class="form-label">المساحة (م²)</label>
+                        <input asp-for="Area" type="number" step="any" class="form-control bg-dark text-white border-secondary" />
                         <span asp-validation-for="Area" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
-                        <label asp-for="RoomsCount" class="form-label fw-bold"></label>
-                        <input asp-for="RoomsCount" type="number" class="form-control bg-dark text-white border-secondary py-2" placeholder="4" />
+                        <label asp-for="RoomsCount" class="form-label">عدد الغرف</label>
+                        <input asp-for="RoomsCount" type="number" class="form-control bg-dark text-white border-secondary" />
                         <span asp-validation-for="RoomsCount" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
-                        <label asp-for="LegalStatus" class="form-label fw-bold"></label>
-                        <select asp-for="LegalStatus" class="form-select bg-dark text-white border-secondary py-2">
+                        <label asp-for="LegalStatus" class="form-label">نوع الفراغة</label>
+                        <select asp-for="LegalStatus" class="form-select bg-dark text-white border-secondary">
                             <option value="طابو أخضر">طابو أخضر</option>
                             <option value="مشاع بعقد تنازل">مشاع بعقد تنازل</option>
                             <option value="بعقد تنازل">بعقد تنازل</option>
@@ -66,61 +82,59 @@
                     </div>
                 </div>
 
-                <!-- معلومات التواصل معي صاحب العقار (النداء والهاتف) -->
-                <div class="row g-3 mb-4">
+                <!-- نداء الدولة ورقم الهاتف -->
+                <div class="row g-3 mb-3">
                     <div class="col-md-4">
-                        <label asp-for="PhoneDialCode" class="form-label fw-bold"></label>
-                        <select asp-for="PhoneDialCode" class="form-select bg-dark text-white border-secondary py-2">
-                            <option value="+963">سوريا (+963)</option>
-                            <option value="+966">السعودية (+966)</option>
-                            <option value="+971">الإمارات (+971)</option>
-                            <option value="+90">تركيا (+90)</option>
-                            <option value="+962">الأردن (+962)</option>
-                        </select>
+                        <label asp-for="PhoneDialCode" class="form-label">نداء الدولة</label>
+                        <input asp-for="PhoneDialCode" class="form-control bg-dark text-white border-secondary text-end" dir="ltr" />
                         <span asp-validation-for="PhoneDialCode" class="text-danger small"></span>
                     </div>
                     <div class="col-md-8">
-                        <label asp-for="PhoneNumber" class="form-label fw-bold"></label>
-                        <input asp-for="PhoneNumber" class="form-control bg-dark text-white border-secondary py-2" placeholder="912345678" />
+                        <label asp-for="PhoneNumber" class="form-label">رقم هاتف البائع</label>
+                        <input asp-for="PhoneNumber" class="form-control bg-dark text-white border-secondary text-end" dir="ltr" />
                         <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                     </div>
                 </div>
 
-                <!-- الوصف التفصيلي -->
-                <div class="mb-4">
-                    <label asp-for="Description" class="form-label fw-bold"></label>
-                    <textarea asp-for="Description" class="form-control bg-dark text-white border-secondary" rows="4" placeholder="اكتب تفاصيل إضافية مثل الإكساء، الاتجاه، الطابق..."></textarea>
-                    <span asp-validation-for="Description" class="text-danger small"></span>
-                </div>
+                <!-- خاصية تعيين الأدمن (تظهر فقط للسوبر أدمن) -->
+                @if (User.IsInRole("SuperAdmin"))
+                {
+                    <div class="mb-3">
+                        <label asp-for="AssignedAdminId" class="form-label text-light small fw-bold">الأدمن المسؤول عن متابعة العقار (صلاحية SuperAdmin)</label>
+                        <select asp-for="AssignedAdminId" asp-items="ViewBag.AdminsList" class="form-select bg-dark text-white border-secondary">
+                            <option value="">-- اختر الأدمن المسؤول (اختياري) --</option>
+                        </select>
+                        <span asp-validation-for="AssignedAdminId" class="text-danger small"></span>
+                    </div>
+                }
 
                 <!-- السعر المطلوب -->
-                <div class="mb-4">
-                    <label asp-for="Price" class="form-label fw-bold"></label>
-                    <div class="input-group">
-                        <input asp-for="Price" type="number" step="100" class="form-control bg-dark text-white border-secondary py-2" placeholder="50000" />
-                        <span class="input-group-text bg-secondary bg-opacity-25 text-light border-secondary">$</span>
-                    </div>
+                <div class="mb-3">
+                    <label asp-for="Price" class="form-label">السعر المطلوب ($)</label>
+                    <input asp-for="Price" type="number" step="any" class="form-control bg-dark text-white border-secondary" />
                     <span asp-validation-for="Price" class="text-danger small"></span>
                 </div>
 
-                <!-- رفع صور متعددة -->
-                <div class="mb-5">
-                    <label asp-for="ImageFiles" class="form-label fw-bold"></label>
-                    <input asp-for="ImageFiles" type="file" multiple class="form-control bg-dark text-white border-secondary py-2" accept="image/*" />
-                    <span asp-validation-for="ImageFiles" class="text-danger small"></span>
-                    <small class="text-light opacity-50 d-block mt-1">يمكنك اختيار أكثر من صورة معاً للعقار.</small>
+                <!-- الوصف -->
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">الوصف التفصيلي للعقار</label>
+                    <textarea asp-for="Description" class="form-control bg-dark text-white border-secondary" rows="4"></textarea>
+                    <span asp-validation-for="Description" class="text-danger small"></span>
                 </div>
 
-                <button type="submit" class="btn btn-gradient-primary w-100 py-3 fs-5 fw-bold shadow">
-                    حفظ ونشر العقار
-                </button>
+                <!-- رفع الصور -->
+                <div class="mb-4">
+                    <label asp-for="ImageFiles" class="form-label">صور العقار (يمكن اختيار أكثر من صورة)</label>
+                    <input asp-for="ImageFiles" type="file" multiple class="form-control bg-dark text-white border-secondary" accept="image/*" />
+                    <span asp-validation-for="ImageFiles" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-gradient-primary w-100 py-2 fs-5 fw-bold">نشر العقار</button>
             </form>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
 }
